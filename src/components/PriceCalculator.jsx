@@ -70,7 +70,7 @@ export default function PriceCalculator({ distances }) {
             <p className="text-sm font-medium text-gray-800">Fee Jasa Titip</p>
             {/* Harga coret kecil di bawah judul fee */}
             <span className="text-[10px] text-gray-400 line-through decoration-red-400 block">
-              {formatRupiah(25000)}
+              {formatRupiah(5000)}
             </span>
           </div>
         </div>
