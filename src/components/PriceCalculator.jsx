@@ -61,15 +61,24 @@ export default function PriceCalculator({ distances }) {
         </div>
 
         {/* Fee Jastip */}
-        <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
-              <Calculator size={16} />
-            </div>
-            <p className="text-sm font-medium text-gray-800">Fee Jasa Titip</p>
+       <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
+            <Calculator size={16} />
           </div>
-          <span className="text-sm font-semibold text-gray-800">{formatRupiah(PRICING_CONFIG.FIXED_JASTIP_FEE)}</span>
+          <div>
+            <p className="text-sm font-medium text-gray-800">Fee Jasa Titip</p>
+            {/* Harga coret kecil di bawah judul fee */}
+            <span className="text-[10px] text-gray-400 line-through decoration-red-400 block">
+              {formatRupiah(25000)}
+            </span>
+          </div>
         </div>
+        {/* Harga promo yang aktif */}
+        <span className="text-sm font-semibold text-purple-600">
+          {formatRupiah(PRICING_CONFIG.FIXED_JASTIP_FEE)}
+        </span>
+      </div>
 
         {/* Total Keseluruhan */}
         <div className="flex justify-between items-center pt-2">
