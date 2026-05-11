@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import { MapPin, Store, User, Navigation } from 'lucide-react';
 
-export default function AddressForm({ setStoreLocation, setCustomerLocation, onCalculate, isReady }) {
+export default function AddressForm({ setStoreLocation, setCustomerLocation, customerLocation, onCalculate, isReady }) {
   const storeInputRef = useRef();
   const customerInputRef = useRef();
   const [isLocating, setIsLocating] = useState(false);
@@ -136,18 +136,19 @@ export default function AddressForm({ setStoreLocation, setCustomerLocation, onC
         </Autocomplete>
       </div>
 
-      <button
-        onClick={onCalculate}
-        disabled={!isReady}
-        className={`w-full py-3 mt-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${
-          isReady 
-          ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg' 
-          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-        }`}
-      >
-        <MapPin size={18} />
-        Kalkulasi Jarak & Harga
-      </button>
+    <button
+  onClick={onCalculate}
+  // Tombol aktif kalau customerLocation sudah ada isinya
+  disabled={!customerLocation} 
+  className={`w-full py-3 mt-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${
+    customerLocation // Ganti isReady jadi customerLocation di sini juga
+    ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg' 
+    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+  }`}
+>
+  <MapPin size={18} />
+  Kalkulasi Jarak & Harga
+</button>
     </div>
   );
 }
