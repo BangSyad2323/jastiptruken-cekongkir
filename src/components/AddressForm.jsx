@@ -94,47 +94,53 @@ export default function AddressForm({ setStoreLocation, setCustomerLocation, cus
       <div className="space-y-1">
         <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
           <Store size={16} className="text-blue-500" />
-          Alamat Toko (Ambil Barang)
+          Alamat Toko 
         </label>
         <Autocomplete onLoad={(autoC) => storeInputRef.current = autoC} onPlaceChanged={onStorePlaceChanged} options={autocompleteOptions}>
           <input
             type="text"
-            placeholder="Cari nama toko atau jalan..."
+            placeholder="Cari nama toko atau jalan"
             className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-sm"
             options={autocompleteOptions}
           />
         </Autocomplete>
       </div>
 
-      {/* Input Customer */}
-      <div className="space-y-1">
-        <div className="flex justify-between items-center">
-          <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <User size={16} className="text-green-500" />
-            Alamat Tujuan (Customer)
-          </label>
-          
-          {/* TOMBOL LOKASI SAYA */}
-          <button 
-            onClick={handleGetCurrentLocation}
-            disabled={isLocating}
-            className="text-[10px] font-bold uppercase tracking-wider text-white bg-blue-600 px-2 py-1 rounded hover:bg-blue-100 flex items-center gap-1 transition-colors disabled:opacity-50"
-          >
-            <Navigation size={10} className={isLocating ? "animate-pulse" : ""} />
-            {isLocating ? "Mencari..." : "Lokasi Saya"}
-          </button>
-        </div>
+     {/* Input Customer */}
+    <div className="space-y-1">
+      <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+        <User size={16} className="text-green-500" />
+        Lokasi Anda 
+      </label>
 
-        <Autocomplete onLoad={(autoC) => customerInputRef.current = autoC} onPlaceChanged={onCustomerPlaceChanged} options={autocompleteOptions}>
+      <div className="relative flex items-center">
+        <Autocomplete 
+          onLoad={(autoC) => customerInputRef.current = autoC} 
+          onPlaceChanged={onCustomerPlaceChanged} 
+          options={autocompleteOptions}
+          className="w-full" // Pastikan Autocomplete memenuhi lebar container
+        >
           <input
             id="customer-input"
             type="text"
             placeholder="Cari lokasi pengiriman..."
-            className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none transition-all shadow-sm text-sm"
-            
+            className="w-full p-3 pr-24 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none transition-all shadow-sm text-sm"
           />
         </Autocomplete>
+
+        {/* TOMBOL LOKASI SAYA (DI DALAM INPUT) */}
+        <button 
+          onClick={handleGetCurrentLocation}
+          disabled={isLocating}
+          className="absolute right-2 px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-white hover:text-red-600 transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
+        >
+          <Navigation size={12} className={isLocating ? "animate-pulse" : ""} />
+          <span className="text-[10px] font-bold uppercase tracking-tight">
+            {isLocating ? "..." : "Lokasi"}
+          </span>
+        </button>
       </div>
+    </div>
 
     <button
   onClick={onCalculate}
@@ -147,7 +153,7 @@ export default function AddressForm({ setStoreLocation, setCustomerLocation, cus
   }`}
 >
   <MapPin size={18} />
-  Kalkulasi Jarak & Harga
+  Hitung Ongkir
 </button>
     </div>
   );
