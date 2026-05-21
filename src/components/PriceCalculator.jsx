@@ -53,7 +53,7 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
           <Wallet size={18} className="text-slate-600" /> Rincian Biaya
         </h3>
         {totalTime > 0 && (
-          <div className="bg-blue-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 ">
+          <div className=" text-black text-[12px] font-bold flex items-center gap-1 ">
             <Clock size={12} /> ±{totalTime} MENIT
           </div>
         )}
@@ -71,11 +71,11 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
         {hasStore && isOpposite && (
           <div className="flex justify-between items-center">
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-red-50 rounded-lg text-red-600">
+              <div className="p-2 bg-red-600 rounded-lg text-white">
                 <MapPin size={16} />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-800">Tambahan Jemput</p>
+                <p className="text-sm font-medium text-gray-800">Ambil Barang</p>
                 <p className="text-xs text-gray-500">{pickup.toFixed(1)} km x Rp 1.000/km</p>
               </div>
             </div>
@@ -86,7 +86,7 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
         {/* ONGKIR ANTAR (Dinamis sesuai logika) */}
         <div className="flex justify-between items-center">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+            <div className="p-2 bg-blue-600 rounded-lg text-white">
               <Truck size={16} />
             </div>
             <div>
@@ -100,7 +100,7 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
         {/* Fee Jastip & Total Tetap Sama */}
         <div className="flex justify-between items-center pb-2 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-50 rounded-lg text-green-600">
+            <div className="p-2 bg-green-600 rounded-lg text-white">
               <Calculator size={16} />
             </div>
             <div>
@@ -108,7 +108,7 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
               <span className="text-[10px] text-gray-400 line-through decoration-red-400 block">{formatRupiah(5000)}</span>
             </div>
           </div>
-          <span className="text-sm font-semibold text-green-600">{formatRupiah(PRICING_CONFIG.FIXED_JASTIP_FEE)}</span>
+          <span className="text-sm font-semibold text-black">{formatRupiah(PRICING_CONFIG.FIXED_JASTIP_FEE)}</span>
         </div>
 
         <div className="flex justify-between items-center pt-2">

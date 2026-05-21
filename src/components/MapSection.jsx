@@ -8,13 +8,14 @@ const containerStyle = {
   height: '100%'
 };
 
-export default function MapSection({ adminLocation, storeLocation, customerLocation, directionsResponse }) {
+export default function MapSection({ adminLocation, storeLocation, customerLocation, directionsResponse, onMapClick }) {
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={adminLocation}
       zoom={13}
       options={MAP_OPTIONS}
+      onClick={onMapClick}
     >
       {/* Marker Admin Selalu Muncul */}
       <Marker 
