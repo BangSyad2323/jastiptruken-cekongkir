@@ -46,6 +46,7 @@ export default function DetailMenu() {
               src={foto} 
               alt={`${produk.nama} ${index + 1}`} 
               className="w-full h-full object-cover"
+              loading='lazy'
             />
           </div>
         ))}
@@ -60,10 +61,17 @@ export default function DetailMenu() {
 
       {/* Konten Detail */}
       <div className="p-6 mt-5 bg-white rounded-t-[32px] relative z-10 ">
-        <div className="flex justify-between items-start mb-2">
-          <h1 className="text-2xl font-black text-slate-800 flex-1">{produk.nama}</h1>
-          <span className="text-lg font-black text-blue-600">{produk.harga}</span>
-        </div>
+       <div className="flex justify-between items-start mb-2 gap-4">
+  {/* Tambahkan leading-none atau leading-tight */}
+        <h1 className="text-lg font-black text-slate-800 flex-1 leading-tight capitalize tracking-tight">
+          {produk.nama}
+        </h1>
+        
+        {/* Harganya juga dikunci biar sejajar sama baris pertama teks */}
+        <span className="text-lg font-black text-blue-600 leading-tight shrink-0">
+          {produk.harga}
+        </span>
+      </div>
 
         <div className="flex flex-col gap-2 mb-6">
           <div className="flex items-center gap-2 text-gray-500 text-sm font-medium">
@@ -127,6 +135,7 @@ export default function DetailMenu() {
             src={selectedImg} 
             className="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl" 
             alt="Zoom View" 
+            loading='lazy'
           />
         </div>
       )}

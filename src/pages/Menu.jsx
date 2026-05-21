@@ -11,22 +11,36 @@ export default function Menu() {
   return (
     <div className="min-h-screen bg-slate-200">
       <div className="min-h-screen bg-gray-50 max-w-md mx-auto shadow-2xl relative pb-20">
-      {/* HEADER */}
-      <div className="bg-white p-4 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-md mx-auto flex items-center gap-4">
-          <button 
-            onClick={() => navigate('/')}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <ArrowLeft size={24} className="text-slate-800" />
-          </button>
-          <div>
-            <h1 className="text-xl font-black text-slate-800 leading-none">KATALOG MENU</h1>
-            <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1">Truken Jastip Food</p>
+      {/* HEADER PREMIUM */}
+        <div className="sticky top-0 z-[60] px-4 py-3">
+          {/* Glassmorphism Background */}
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm"></div>
+
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* Tombol Back dengan Lingkaran Soft */}
+              <button 
+                onClick={() => navigate('/')}
+                className="group p-2 bg-slate-900 -mt-6 text-white rounded-2xl hover:bg-blue-600 transition-all duration-300 shadow-lg shadow-slate-900/20 active:scale-90"
+              >
+                <ArrowLeft size={20} strokeWidth={3} className="group-hover:-translate-x-1 transition-transform" />
+              </button>
+
+              {/* Teks Judul dengan Aksen */}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1">
+                  <h1 className="text-lg font-black text-slate-900 tracking-tight leading-none">
+                    KATALOG <span className="text-amber-600">MENU</span>
+                  </h1>
+                </div>
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-1">
+                  <span className="w-4 h-[1px] bg-slate-300"></span>
+                  Truken Jastip Food
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
       {/* SEARCH BAR (Biar makin pro) */}
       <div className="p-4 max-w-md mx-auto">
         <div className="relative">
@@ -52,6 +66,7 @@ export default function Menu() {
                 src={item.galeri[0]} 
                 alt={item.nama}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                loading='lazy'
               />
               <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full shadow-sm">
                 <span className="text-xs font-black text-blue-600">{item.harga}</span>
