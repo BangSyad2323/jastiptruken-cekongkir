@@ -28,7 +28,8 @@ export default function DetailMenu() {
   if (!produk) return <div>Menu tidak ditemukan!</div>;
 
   return (
-    <div className="min-h-screen bg-white">
+   <div className="min-h-screen bg-slate-200">
+      <div className="min-h-screen bg-white max-w-md mx-auto shadow-2xl relative pb-32 overflow-x-hidden">
       {/* Tombol Back Melayang */}
       <button 
         onClick={() => navigate('/menu')}
@@ -76,7 +77,7 @@ export default function DetailMenu() {
         </div>
 
         {/* Tombol Aksi */}
-        <div className="fixed bottom-6 left-0 right-0 px-4 z-50">
+        <div className="fixed bottom-6  left-1/2 -translate-x-1/2  px-4 z-50 w-full max-w-md">
           <div className="bg-slate-900 p-2 rounded-[28px] shadow-2xl flex items-center gap-3 border border-white/10 backdrop-blur-md">
             {/* WADAH FOTO MENU TOKO DENGAN LABEL */}
             <div className="relative flex-none group">
@@ -170,16 +171,17 @@ export default function DetailMenu() {
 
             <button 
               onClick={handleOrderWA}
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-3 shadow-xl shadow-green-200 transition-all active:scale-95"
+              className="w-full  bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-3 shadow-xl shadow-green-200 transition-all active:scale-95"
             >
               <ShoppingCart size={20} />
-              KIRIM PESANAN KE WA
+              KIRIM PESANAN
             </button>
           </div>
         </div>
       )}
 
 
+    </div>
     </div>
   );
 }

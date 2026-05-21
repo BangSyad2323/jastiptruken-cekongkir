@@ -9,7 +9,8 @@ export default function Menu() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-slate-200">
+      <div className="min-h-screen bg-gray-50 max-w-md mx-auto shadow-2xl relative pb-20">
       {/* HEADER */}
       <div className="bg-white p-4 sticky top-0 z-10 shadow-sm">
         <div className="max-w-md mx-auto flex items-center gap-4">
@@ -83,6 +84,7 @@ export default function Menu() {
           Gak nemu yang dicari? Langsung chat ajah
         </p>
       </div>
+    </div>
     </div>
   );
 }
