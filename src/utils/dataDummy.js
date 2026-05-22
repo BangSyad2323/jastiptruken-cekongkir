@@ -13,7 +13,9 @@ export const DUMMY_MENU = [
     ],
     deskripsi: "Hai Hai Haii, kalau kalau kalian pengen seblak, kesini ajaaaaaaa",
     estimasi: "15-20 Menit",
-    menu_toko:  "/waroeng_seblak_nyeni/seblaknyenimenu.webp"
+    menu_toko: [
+   "/waroeng_seblak_nyeni/seblaknyenimenu.webp",
+  ]
   },
   {
     id: 2,
@@ -26,7 +28,10 @@ export const DUMMY_MENU = [
       "/mieayambumbubali/mieayambumbubali1.webp", 
       "/mieayambumbubali/mieayambumbubali2.webp"
     ],
-    menu_toko: "/mieayambumbubali/mieayambumbubali3.webp"
+    menu_toko: [
+      "/mieayambumbubali/mieayambumbubali3.webp"
+    ]
+    
   },
   {
     id: 3,
@@ -40,7 +45,9 @@ export const DUMMY_MENU = [
       "/martabakagus/martabakagus2.webp", 
       "/martabakagus/martabakagus3.webp"
     ],
-    menu_toko: "/martabakagus/martabakagusmenu.webp"
+    menu_toko: [
+      "/martabakagus/martabakagusmenu.webp"
+      ]
   },
   {
     id: 4,
@@ -54,7 +61,12 @@ export const DUMMY_MENU = [
       "/eatchan/eatchan2.webp", 
       "/eatchan/eatchan3.webp"
     ],
-    menu_toko: "/menubelumtersedia.webp"
+    menu_toko: [
+      "/eatchan/eatchanmenu1.webp",
+      "/eatchan/eatchanmenu2.webp",
+      "/eatchan/eatchanmenu3.webp",
+      "/eatchan/eatchanmenu4.webp",
+      ] 
   }
 ];
 

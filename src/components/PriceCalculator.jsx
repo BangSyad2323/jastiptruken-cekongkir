@@ -1,12 +1,12 @@
 // src/components/PriceCalculator.jsx
-import React from 'react';
+import { forwardRef } from 'react';
 import { PRICING_CONFIG } from '../utils/constants';
 import { formatRupiah } from '../utils/helpers';
 import { Calculator, Truck, PackageCheck, Wallet, Clock, MapPin } from 'lucide-react';
 
-export default function PriceCalculator({ distances, durations }) {
+function PriceCalculatorBase({ distances, durations }, ref) {
   // Kita kasih nilai default 0 kalau variabelnya belum ada
-const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = false } = distances || {};
+  const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = false } = distances || {};
   const { pickup: pTime, delivery: dTime } = durations || { pickup: 0, delivery: 0 };
   
   // Kalkulasi Biaya
@@ -36,9 +36,9 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
 
     // Render state kosong jika belum ada perhitungan
     // Render state kosong jika belum ada perhitungan
-  if (direct === 0) { // Cukup cek direct-nya saja ndes
+  if (direct === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-6 border-2 border-dashed border-gray-200 rounded-xl">
+      <div ref={ref} className="flex-1 flex flex-col items-center justify-center text-gray-400 p-6 border-2 border-dashed border-gray-200 rounded-xl">
         <Calculator size={48} className="mb-3 opacity-50" />
         <p className="text-sm text-center">Masukkan lokasi anda untuk menghitung ongkir</p>
       </div>
@@ -46,7 +46,7 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
   }
 
   return (
-    <div className="bg-white border border-gray-100 shadow-sm rounded-xl overflow-hidden flex flex-col">
+    <div ref={ref} className="bg-white border border-gray-100 shadow-sm rounded-xl overflow-hidden flex flex-col">
       {/* Header Rincian & Badge Waktu Tetap Sama */}
       <div className="bg-slate-50 border-b border-gray-100 p-4 flex justify-between items-center text-left">
         <h3 className="font-semibold text-slate-800 flex items-center gap-2">
@@ -122,3 +122,7 @@ const { direct = 0, pickup = 0, delivery = 0, isOpposite = false, hasStore = fal
     </div>
   );
 }
+
+const PriceCalculator = forwardRef(PriceCalculatorBase);
+
+export default PriceCalculator;

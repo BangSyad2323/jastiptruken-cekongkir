@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { UtensilsCrossed } from "lucide-react";
 import { useJsApiLoader } from "@react-google-maps/api";
@@ -6,7 +6,7 @@ import MapSection from "../components/MapSection";
 import AddressForm from "../components/AddressForm";
 import PriceCalculator from "../components/PriceCalculator";
 import { ADMIN_LOCATION } from "../utils/constants";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 const libraries = ["places"];
@@ -26,6 +26,8 @@ export default function Home() {
   const [durations, setDurations] = useState({ pickup: 0, delivery: 0 });
 
   const [showQRIS, setShowQRIS] = useState(false);
+  const priceRef = useRef(null);
+  const panelRef = useRef(null);
 
   const whatsappNumber = "62895379007437"; // Ganti pakai nomor WA-mu ndes (awali 62)
   const textWA = encodeURIComponent(
@@ -139,6 +141,35 @@ export default function Home() {
     }
   }, [storeLocation, customerLocation]);
 
+  useEffect(() => {
+    if (!directionsResponse) return;
+
+    const frame = requestAnimationFrame(() => {
+      const target = priceRef.current;
+      const container = panelRef.current;
+
+      if (!target) return;
+
+      if (container) {
+        const targetRect = target.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const offset = targetRect.top - containerRect.top + container.scrollTop;
+
+        container.scrollTo({
+          top: offset - 16,
+          behavior: "smooth",
+        });
+      } else {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [directionsResponse]);
+
   // Efek Real-time: Kalkulasi otomatis saat lokasi berubah
   useEffect(() => {
     if (storeLocation && customerLocation) {
@@ -206,7 +237,10 @@ export default function Home() {
 
       {/* BAGIAN PANEL (SCROLLABLE) */}
       <div className="flex-1 flex flex-col bg-white shadow-[-10px_0_30px_rgba(0,0,0,0.05)] z-20 overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-5 md:p-8 space-y-2 text-left">
+        <div
+          ref={panelRef}
+          className="flex-1 overflow-y-auto p-5 md:p-8 space-y-2 text-left"
+        >
           {/* Tambahkan text-left karena CSS kamu sebelumnya set text-center */}
 
           <div className="flex justify-between items-start">
@@ -306,27 +340,31 @@ export default function Home() {
             isReady={!customerLocation}
           />
 
-          <PriceCalculator distances={distances} durations={durations} />
+          <PriceCalculator
+            ref={priceRef}
+            distances={distances}
+            durations={durations}
+          />
 
           {/* TOMBOL MENU DI DALAM HOME */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-[200px] px-4">
-        <button
-          onClick={() => navigate('/menu')} // Pakai fungsi ini buat pindah
-          className="group flex items-center gap-2 justify-center bg-slate-900 text-white py-3.5 px-6 rounded-2xl shadow-lg transition-all active:scale-95 border border-white/10 w-full"
-        >
-          <div className="bg-amber-600 p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
-            <UtensilsCrossed size={18} className="text-white" />
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-[200px] px-4">
+            <button
+              onClick={() => navigate("/menu")} // Pakai fungsi ini buat pindah
+              className="group flex items-center gap-2 justify-center bg-slate-900 text-white py-3.5 px-6 rounded-2xl shadow-lg transition-all active:scale-95 border border-white/10 w-full"
+            >
+              <div className="bg-amber-600 p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
+                <UtensilsCrossed size={18} className="text-white" />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-tighter leading-none text-left">
+                  Cek Katalog
+                </span>
+                <span className="text-[12px] font-black tracking-tight leading-none mt-1">
+                  LIHAT MENU
+                </span>
+              </div>
+            </button>
           </div>
-          <div className="flex flex-col items-start">
-            <span className="text-[10px] font-bold text-amber-600 uppercase tracking-tighter leading-none text-left">
-              Cek Katalog
-            </span>
-            <span className="text-[12px] font-black tracking-tight leading-none mt-1">
-              LIHAT MENU
-            </span>
-          </div>
-        </button>
-      </div>
           {/* Spasi tambahan di bawah biar nggak mentok navigasi HP */}
           <div className="h-20 md:hidden"></div>
         </div>

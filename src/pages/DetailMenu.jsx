@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DUMMY_MENU } from '../utils/dataDummy';
-import { ArrowLeft, MapPin, Clock, ShoppingCart, X, ZoomIn } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, ShoppingCart, X, ZoomIn, Navigation } from 'lucide-react';
 
 export default function DetailMenu() {
   const { id } = useParams(); // Ambil ID dari URL
@@ -14,16 +14,48 @@ export default function DetailMenu() {
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
   const [extraMenu, setExtraMenu] = useState(""); // Buat menu tambahan dari daftar toko
+  const [userLocation, setUserLocation] = useState("");
+  const [isLocating, setIsLocating] = useState(false); 
 
   const handleOrderWA = () => {
+
+    if (!extraMenu.trim()) {
+    alert("Waduh ndes, isi dulu menu yang mau dipesan dari daftar menu toko!");
+    return; // Berhenti di sini, gak bakal buka WA
+  }
+
+  if (!userLocation.trim()) {
+    alert("Alamatnya jangan lupa diisi atau klik tombol GPS biar gak nyasar!");
+    return; // Berhenti di sini juga
+  }
+
   const phoneNumber = "62895379007437"; // No WA Truken
-  const message = `Halo Truken! %0A%0ASaya mau pesan Jastip *${produk.nama}* %0A%0A*Dengan Menu:*%0A${extraMenu || "-"}%0A%0A*Catatan Khusus:*%0A${note || "-"}%0A%0A*Lokasi Warung:* ${produk.lokasi}%0A---------------------------%0A*Mohon diproses yaaa*`;
+  const message = `Halo Truken! %0A%0ASaya mau pesan Jastip *${produk.nama}* %0A%0A*Dengan Menu:*%0A${extraMenu || "-"}%0A%0A*Catatan Khusus:*%0A${note || "-"}%0A%0A*Lokasi Warung:* ${produk.lokasi}%0A---------------------------%0A%0A*Lokasi Pengiriman:*%0A${userLocation || "Belum diisi"}%0A%0A---------------------------%0A*Mohon segera diproses yaaa*`;
 
   window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   // Cari data yang ID-nya cocok dengan ID di URL
   const produk = DUMMY_MENU.find((item) => item.id === parseInt(id));
+
+  const handleGetMyLocation = () => {
+  if (!navigator.geolocation) return alert("Browser kamu nggak support GPS ndes!");
+  
+  setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        // Kita buat format link Maps biar kamu gampang ngekliknya nanti di WA
+        const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        setUserLocation(mapsUrl);
+        setIsLocating(false);
+      },
+      () => {
+        alert("Gagal ambil lokasi, aktifin GPS-mu ndes!");
+        setIsLocating(false);
+      }
+    );
+  };
 
   if (!produk) return <div>Menu tidak ditemukan!</div>;
 
@@ -90,15 +122,18 @@ export default function DetailMenu() {
             {/* WADAH FOTO MENU TOKO DENGAN LABEL */}
             <div className="relative flex-none group">
               <button 
-                onClick={() => setSelectedImg(produk.menu_toko)}
-                className="h-14 w-14 rounded-2xl overflow-hidden border-2 border-blue-500/50 shadow-lg shadow-blue-500/20 active:scale-90 transition-all overflow-hidden relative"
+                onClick={() => setSelectedImg(produk.menu_toko)} // Kirim array foto menu
+                className="h-14 w-14 rounded-2xl overflow-hidden border-2 border-blue-500/50 shadow-lg shadow-blue-500/20 active:scale-90 transition-all relative group"
               >
-                <img src={produk.menu_toko} className="w-full h-full object-cover brightness-75 group-hover:brightness-100 transition-all" />
+                {/* Tampilkan foto pertama sebagai thumbnail */}
+                <img 
+                  src={produk.menu_toko[0]} 
+                  className="w-full h-full object-cover brightness-50 group-hover:brightness-75 transition-all" 
+                />
                 
-                {/* Overlay Tulisan MENU */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <span className="text-[9px] font-black text-white tracking-tighter leading-none text-center">
-                    LIHAT<br/>MENU
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-[10px] font-black text-white leading-tight text-center">
+                    {produk.menu_toko.length} HAL<br/>MENU
                   </span>
                 </div>
               </button>
@@ -124,19 +159,54 @@ export default function DetailMenu() {
 
 
       {selectedImg && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl transition-all">
+        <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl transition-all">
+          {/* Tombol Close */}
           <button 
             onClick={() => setSelectedImg(null)}
-            className="absolute top-6 right-6 bg-white/20 p-2 rounded-full text-white"
+            className="absolute top-6 right-6 z-[130] bg-white/20 p-3 rounded-full text-white backdrop-blur-md active:scale-90"
           >
-            <X size={24} />
+            <X size={24} strokeWidth={3} />
           </button>
-          <img 
-            src={selectedImg} 
-            className="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl" 
-            alt="Zoom View" 
-            loading='lazy'
-          />
+
+          {/* Wadah Slider Foto Menu */}
+          <div className="w-full flex overflow-x-auto snap-x snap-mandatory no-scrollbar h-[80vh] items-center">
+            {/* Jika yang di-klik adalah menu_toko (Array), kita loop. 
+                Jika cuma satu foto (String), kita tampilin satu aja. */}
+            {Array.isArray(selectedImg) ? (
+              selectedImg.map((foto, idx) => (
+                <div key={idx} className="flex-none w-full h-full flex items-center justify-center snap-center p-4">
+                  <img 
+                    src={foto} 
+                    className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl border border-white/10" 
+                    alt={`Menu Hal ${idx + 1}`}
+                    loading="lazy"
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="flex-none w-full h-full flex items-center justify-center p-4">
+                <img src={selectedImg} className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl" alt="Zoom" />
+              </div>
+            )}
+          </div>
+
+          {/* Indikator Halaman (Cuma muncul kalau fotonya banyak) */}
+          {/* Indikator Halaman & Petunjuk Geser */}
+          {Array.isArray(selectedImg) && selectedImg.length > 1 && (
+            <div className="absolute bottom-10 flex flex-col items-center gap-4">
+              {/* Titik-titik indikator */}
+              <div className="flex gap-2">
+                {selectedImg.map((_, i) => (
+                  <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+                ))}
+              </div>
+              
+              {/* Tulisan petunjuk yang cuma muncul kalau menunya banyak */}
+              <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em] animate-pulse flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                Geser halaman <span className="text-blue-400">→</span>
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -160,11 +230,42 @@ export default function DetailMenu() {
               <textarea 
                 value={extraMenu}
                 onChange={(e) => setExtraMenu(e.target.value)}
-                placeholder="Contoh: Nasi Putih 2, Es Teh Manis 1, Kerupuk 3..."
+                placeholder="Contoh: Nasi Putih 2, Es Teh Manis 1, Kerupuk 3"
                 className="w-full bg-gray-50 border border-gray-500 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none h-24 resize-none"
               />
               <p className="text-[9px] text-gray-800 mt-2 font-medium italic">*Lihat foto daftar menu di pojok kiri bawah tombol pesan </p>
             </div>
+
+            {/* 4. INPUT LOKASI PENGIRIMAN */}
+              <div className="mb-8">
+                <label className="text-[10px] font-black text-gray-800 uppercase tracking-widest block mb-3 leading-none">
+                  Lokasi Pengiriman / Alamat
+                </label>
+                <div className="relative flex items-center">
+                  <input 
+                    type="text"
+                    value={userLocation}
+                    onChange={(e) => setUserLocation(e.target.value)}
+                    placeholder="klik tombol GPS"
+                    className="w-full bg-gray-50 border border-gray-500 rounded-2xl p-4 pr-32 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                  
+                  {/* Tombol GPS di dalam Input */}
+                  <button 
+                    onClick={handleGetMyLocation}
+                    disabled={isLocating}
+                    className={`absolute right-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase flex items-center gap-1.5 transition-all
+                      ${isLocating 
+                        ? 'bg-gray-200 text-gray-400' 
+                        : 'bg-blue-600 text-white shadow-lg shadow-blue-200 active:scale-95'
+                      }`}
+                  >
+                    <Navigation size={12} className={isLocating ? "animate-spin" : "animate-pulse"} />
+                    {isLocating ? "Wait..." : "GPS"}
+                  </button>
+                </div>
+                <p className="text-[9px] text-gray-500 mt-2 italic">*Klik tombol GPS!</p>
+              </div>
 
             {/* 3. INPUT CATATAN */}
             <div className="mb-8">
@@ -173,17 +274,23 @@ export default function DetailMenu() {
                 type="text"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="Contoh: Gak pake seledri, sambal pisah..."
+                placeholder="Contoh: Gak pake seledri, sambal pisah"
                 className="w-full bg-gray-50 border border-gray-500 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
 
+           {/* // Di dalam return modal, pada bagian tombol KIRIM PESANAN */}
             <button 
               onClick={handleOrderWA}
-              className="w-full  bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-3 shadow-xl shadow-green-200 transition-all active:scale-95"
+              disabled={!extraMenu || !userLocation} // Tombol jadi mati kalau belum diisi
+              className={`w-full py-4 rounded-2xl font-black flex items-center justify-center gap-3 transition-all active:scale-95
+                ${(!extraMenu || !userLocation) 
+                  ? 'bg-gray-300 cursor-not-allowed opacity-70' // Warna abu-abu kalau belum lengkap
+                  : 'bg-green-500 hover:bg-green-600 text-white shadow-xl shadow-green-200'
+                }`}
             >
               <ShoppingCart size={20} />
-              KIRIM PESANAN
+              {(!extraMenu || !userLocation) ? "LENGKAPI DATA DULU" : "KIRIM PESANAN"}
             </button>
           </div>
         </div>
